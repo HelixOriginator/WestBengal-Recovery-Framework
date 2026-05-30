@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>West Bengal Land & Resource Recovery Framework | Global Research Initiative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --dark-bg: #0a0a0f;
+            --dark-card: #12121a;
+            --dark-border: #1e1e2e;
+            --accent: #e8b923;
+            --accent-glow: #f5d76e;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --radius: 16px;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+        ::selection { background: rgba(232, 185, 35, 0.3); color: var(--text-primary); }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--dark-border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* Navigation */
+        .navbar {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--dark-border);
+            padding: 1rem 0; transition: all 0.3s ease;
+        }
+        .nav-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-link {
+            color: var(--text-secondary); text-decoration: none;
+            font-weight: 500; font-size: 0.9rem; transition: color 0.3s ease;
+            position: relative;
+        }
+        .nav-link:hover { color: var(--accent); }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0;
+            width: 0; height: 2px; background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; padding-top: 80px;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(232, 185, 35, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(239, 68, 68, 0.03) 0%, transparent 50%);
+        }
+        .hero-content { text-align: center; max-width: 900px; padding: 2rem; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(232, 185, 35, 0.1); border: 1px solid rgba(232, 185, 35, 0.2);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900;
+            line-height: 1.1; margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem; color: var(--text-secondary);
+            margin-bottom: 2rem; max-width: 750px; margin-left: auto; margin-right: auto;
+        }
+        .hero-stats { display: flex; justify-content: center; gap: 2.5rem; margin-top: 3rem; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-size: 2.5rem; font-weight: 800; color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-label {
+            font-size: 0.8rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Sections */
+        .section { padding: 6rem 2rem; max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-tag {
+            display: inline-block; background: rgba(232, 185, 35, 0.1);
+            border: 1px solid rgba(232, 185, 35, 0.2); color: var(--accent);
+            padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--text-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .section-desc { color: var(--text-secondary); max-width: 750px; margin: 0 auto; font-size: 1.1rem; }
+
+        /* Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+        .card {
+            background: var(--dark-card); border: 1px solid var(--dark-border);
+            border-radius: var(--radius); padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px); box-shadow: var(--shadow);
+            border-color: rgba(232, 185, 35, 0.3);
+        }
+        .card:hover::before { opacity: 1; }
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .card h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+
+        /* Card Variants */
+        .bheri-card { background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(59, 130, 246, 0.05)); border: 1px solid rgba(34, 197, 94, 0.15); }
+        .barga-card { background: linear-gradient(135deg, rgba(232, 185, 35, 0.05), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(232, 185, 35, 0.15); }
+        .crisis-card { background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(239, 68, 68, 0.15); }
+        .solution-card { background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(59, 130, 246, 0.08)); border: 1px solid rgba(34, 197, 94, 0.2); }
+
+        /* Tags */
+        .tag {
+            display: inline-block; background: rgba(232, 185, 35, 0.1);
+            border: 1px solid rgba(232, 185, 35, 0.2); color: var(--accent);
+            padding: 0.25rem 0.75rem; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem;
+        }
+        .caution-tag { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .solution-tag { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: var(--success); }
+
+        /* Process Flow */
+        .process-flow { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0; }
+        .process-step {
+            background: var(--dark-card); border: 1px solid var(--dark-border);
+            border-radius: 12px; padding: 1.5rem; min-width: 200px; text-align: center; position: relative;
+        }
+        .process-step-number {
+            width: 30px; height: 30px; background: var(--accent); color: var(--dark-bg);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; margin: 0 auto 0.75rem;
+        }
+        .process-arrow { color: var(--accent); font-size: 1.5rem; }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 2rem; }
+        .timeline::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 2px; background: linear-gradient(180deg, var(--accent), transparent);
+        }
+        .timeline-item { position: relative; padding-bottom: 2rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -2rem; top: 0.5rem;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--accent); transform: translateX(-4px);
+        }
+        .timeline-date {
+            font-family: 'JetBrains Mono', monospace; color: var(--accent);
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;
+        }
+        .timeline-content {
+            background: var(--dark-card); border: 1px solid var(--dark-border);
+            border-radius: 12px; padding: 1.5rem;
+        }
+
+        /* Data Table */
+        .data-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+        .data-table th {
+            background: var(--dark-card); color: var(--accent); font-weight: 600;
+            text-align: left; padding: 1rem; border-bottom: 2px solid var(--dark-border);
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .data-table td {
+            padding: 1rem; border-bottom: 1px solid var(--dark-border);
+            color: var(--text-secondary); font-size: 0.95rem;
+        }
+        .data-table tr:hover td { background: rgba(232, 185, 35, 0.03); color: var(--text-primary); }
+
+        /* Progress Bars */
+        .progress-container { margin: 1rem 0; }
+        .progress-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .progress-bar { height: 8px; background: var(--dark-border); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Alert & Solution Boxes */
+        .alert {
+            background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px; padding: 1.5rem; margin: 2rem 0;
+            display: flex; align-items: flex-start; gap: 1rem;
+        }
+        .alert-icon { color: var(--danger); font-size: 1.5rem; flex-shrink: 0; }
+        .alert-content h4 { color: var(--danger); margin-bottom: 0.5rem; font-weight: 700; }
+        .alert-content p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        .solution-box {
+            background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px; padding: 1.5rem; margin: 1rem 0;
+        }
+        .solution-box h4 {
+            color: var(--success); margin-bottom: 0.75rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .solution-box ul { list-style: none; padding: 0; }
+        .solution-box li {
+            padding: 0.5rem 0; padding-left: 1.5rem; position: relative;
+            color: var(--text-secondary); font-size: 0.95rem;
+        }
+        .solution-box li::before {
+            content: '✓'; position: absolute; left: 0;
+            color: var(--success); font-weight: 700;
+        }
+
+        /* Matrix & Charts */
+        .matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+        .chart-container {
+            background: var(--dark-card); border: 1px solid var(--dark-border);
+            border-radius: var(--radius); padding: 2rem; margin: 2rem 0;
+        }
+        .chart-wrapper { position: relative; height: 300px; }
+
+        /* Method Boxes */
+        .method-box {
+            background: linear-gradient(145deg, var(--dark-card), #1a1a25);
+            padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;
+            border-left: 3px solid var(--accent);
+        }
+        .method-box h4 { color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .method-box ul { padding-left: 1.5rem; }
+        .method-box li { margin-bottom: 0.5rem; color: var(--text-secondary); }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-card); border-top: 1px solid var(--dark-border);
+            padding: 4rem 2rem 2rem; text-align: center;
+        }
+        .footer-content { max-width: 1400px; margin: 0 auto; }
+        .footer-logo {
+            font-size: 1.5rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .footer-text { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+        .footer-creator {
+            background: rgba(232, 185, 35, 0.05); border: 1px solid rgba(232, 185, 35, 0.1);
+            border-radius: 12px; padding: 1.5rem; display: inline-block; margin-top: 1rem;
+        }
+        .footer-creator p { color: var(--text-secondary); font-size: 0.95rem; }
+        .footer-creator .name { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
+
+        /* Animations */
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.02); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeInUp 0.8s ease forwards; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .glow { position: relative; }
+        .glow::after {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, var(--accent), transparent, var(--accent));
+            border-radius: inherit; z-index: -1; opacity: 0;
+            transition: opacity 0.3s ease; filter: blur(10px);
+        }
+        .glow:hover::after { opacity: 0.5; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-stats { gap: 1.5rem; }
+            .stat-number { font-size: 2rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .process-flow { flex-direction: column; }
+            .process-arrow { transform: rotate(90deg); }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo"><i class="fas fa-shield-alt"></i> WB Recovery Framework</div>
+            <ul class="nav-links">
+                <li><a href="#overview" class="nav-link">Overview</a></li>
+                <li><a href="#bheri" class="nav-link">Bheri Systems</a></li>
+                <li><a href="#barga" class="nav-link">Land Rights</a></li>
+                <li><a href="#restitution" class="nav-link">Property Restitution</a></li>
+                <li><a href="#welfare" class="nav-link">Welfare Integrity</a></li>
+                <li><a href="#tech" class="nav-link">Tech Blueprint</a></li>
+                <li><a href="#roadmap" class="nav-link">Roadmap</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-globe"></i> First-of-Its-Kind Global Documentation</div>
+            <h1>West Bengal<br><span>Land &amp; Resource Recovery</span><br>Framework</h1>
+            <p class="hero-subtitle">
+                A comprehensive analytical framework addressing forced property acquisition, 
+                Bheri wetland restoration, Operation Barga land rights recovery, and 
+                systematic welfare scheme audit mechanisms for constitutional, evidence-based governance.
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item"><div class="stat-number" data-count="50000">0</div><div class="stat-label">Families Affected</div></div>
+                <div class="stat-item"><div class="stat-number" data-count="12000">0</div><div class="stat-label">Hectares Disputed</div></div>
+                <div class="stat-item"><div class="stat-number" data-count="250">0</div><div class="stat-label">Bheri Systems</div></div>
+                <div class="stat-item"><div class="stat-number" data-count="15">0</div><div class="stat-label">Districts Impacted</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <div class="section-header reveal">
+            <span class="section-tag">Executive Summary</span>
+            <h2 class="section-title">The Multi-Dimensional Governance Challenge</h2>
+            <p class="section-desc">
+                West Bengal faces an unprecedented convergence of land encroachment, wetland destruction, 
+                systematic welfare fraud, and demographic manipulation requiring an integrated, 
+                constitutionally sound recovery framework grounded in forensic documentation and technological innovation.
+            </p>
+        </div>
+        <div class="card-grid">
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-hand-holding-usd"></i></div>
+                <h3>Forced Property Acquisition</h3>
+                <p>Properties worth crores forcibly transferred for lakhs through coerced documentation under political patronage. Challenge: proving duress when documents appear legally valid on surface.</p>
+                <div style="margin-top: 1rem;"><span class="tag caution-tag">₹5Cr → ₹2L Transfer</span><span class="tag caution-tag">Document Coercion</span></div>
+            </div>
+            <div class="card bheri-card reveal">
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-water"></i></div>
+                <h3>Bheri Wetland Destruction</h3>
+                <p>Traditional wastewater-fed aquaculture systems illegally filled and converted to commercial real estate, destroying Ramsar-protected East Kolkata Wetlands and circular resource recovery infrastructure.</p>
+                <div style="margin-top: 1rem;"><span class="tag">Ramsar Protected</span><span class="tag">Eco-System Loss</span></div>
+            </div>
+            <div class="card barga-card reveal">
+                <div class="card-icon" style="background: rgba(232, 185, 35, 0.1); color: var(--accent);"><i class="fas fa-file-contract"></i></div>
+                <h3>Operation Barga Manipulation</h3>
+                <p>Land rights designed to protect sharecroppers allegedly manipulated to register ineligible beneficiaries on state-owned or disputed lands, consolidating rural vote banks through administrative patronage.</p>
+                <div style="margin-top: 1rem;"><span class="tag">Sharecropper Rights</span><span class="tag caution-tag">Vote Bank Politics</span></div>
+            </div>
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-users-slash"></i></div>
+                <h3>Welfare Scheme Diversion</h3>
+                <p>SC/ST/OBC reservation schemes intended for constitutionally recognized beneficiaries allegedly diverted through fake documentation and colony-based demographic clustering patterns.</p>
+                <div style="margin-top: 1rem;"><span class="tag caution-tag">Fake Beneficiaries</span><span class="tag caution-tag">Colony Clustering</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bheri Section -->
+    <section id="bheri" class="section" style="background: linear-gradient(180deg, var(--dark-bg), rgba(34, 197, 94, 0.02), var(--dark-bg));">
+        <div class="section-header reveal">
+            <span class="section-tag">Ecological &amp; Economic Systems</span>
+            <h2 class="section-title">Understanding Bheri Systems</h2>
+            <p class="section-desc">
+                Bheris represent one of the world's most unique traditional aquaculture systems, 
+                functioning as natural bioremediation engines while sustaining thousands of livelihoods 
+                through circular resource recovery.
+            </p>
+        </div>
+        <div class="card-grid">
+            <div class="card bheri-card reveal">
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-recycle"></i></div>
+                <h3>Wastewater-Fed Aquaculture</h3>
+                <p>Unlike conventional freshwater ponds, Bheris are uniquely engineered to utilize organic sewage and wastewater from Kolkata city. This circular resource recovery system requires no artificial feeding, dramatically lowering operation costs while producing thousands of tons of fresh fish daily.</p>
+            </div>
+            <div class="card bheri-card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-sun"></i></div>
+                <h3>Natural Bioremediation</h3>
+                <p>Shallow depth (50-150 cm) allows maximum sunlight penetration, triggering rapid algal blooms and solar-driven photosynthesis. Algae consume nutrients in wastewater, purifying water naturally while serving as primary fish food source—a zero-input ecological engineering marvel.</p>
+            </div>
+            <div class="card bheri-card reveal">
+                <div class="card-icon" style="background: rgba(232, 185, 35, 0.1); color: var(--accent);"><i class="fas fa-fish"></i></div>
+                <h3>Socio-Economic Lifeline</h3>
+                <p>Sustains livelihoods of tens of thousands of local fishers through cooperative management structures. Creates a self-sufficient circular economy linking urban waste management, water purification, and food security.</p>
+            </div>
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-tractor"></i></div>
+                <h3>Encroachment Crisis</h3>
+                <p>Massive acreages of flat land on urban fringes are frequent targets for illegal filling ("bheri bhorat") and unauthorized conversion into commercial real estate, destroying irreplaceable ecological infrastructure and violating Ramsar Convention protections.</p>
+            </div>
+        </div>
+        <div class="chart-container reveal">
+            <h3 style="margin-bottom: 1.5rem; color: var(--text-primary);">Bheri System: Resource Flow & Restoration Protocol</h3>
+            <div class="process-flow">
+                <div class="process-step"><div class="process-step-number">1</div><strong>City Wastewater</strong><p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Organic sewage inflow</p></div>
+                <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="process-step"><div class="process-step-number">2</div><strong>Solar Photosynthesis</strong><p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Algal bloom generation</p></div>
+                <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="process-step"><div class="process-step-number">3</div><strong>Nutrient Consumption</strong><p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Water purification</p></div>
+                <div class="process-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="process-step"><div class="process-step-number">4</div><strong>Fish Production</strong><p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Market supply & livelihoods</p></div>
+            </div>
+            <div class="method-box">
+                <h4><i class="fas fa-lightbulb"></i> Bheri Restitution Framework</h4>
+                <ul>
+                    <li><strong>GIS & Satellite Mapping:</strong> High-resolution historical vs. current wetland mapping to identify encroached zones and monitor illegal filling in real-time</li>
+                    <li><strong>Cooperative Legal Recognition:</strong> Fast-track registration of legitimate Bheri cooperatives under Ramsar-aligned wetland protection laws</li>
+                    <li><strong>Phased Reclamation:</strong> Legal eviction of unauthorized structures, soil de-compaction, and hydrological restoration funded via green municipal bonds</li>
+                    <li><strong>Transparent Yield Tracking:</strong> Open-ledger cooperative accounting to prevent syndicate monopolization and ensure equitable profit distribution</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Barga Section -->
+    <section id="barga" class="section">
+        <div class="section-header reveal">
+            <span class="section-tag">Historical Context</span>
+            <h2 class="section-title">Operation Barga &amp; Land Rights</h2>
+            <p class="section-desc">
+                Understanding the historical framework of sharecropping rights and how 
+                contemporary political manipulation has distorted the original intent of land reforms.
+            </p>
+        </div>
+        <div class="timeline reveal">
+            <div class="timeline-item">
+                <div class="timeline-date">1978-1980s</div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Operation Barga Launch</h3>
+                    <p>Left Front government initiates land reform to register sharecroppers (Bargadars) formally, granting permanent, hereditary cultivation rights. Goal: Protect from arbitrary eviction and ensure fair crop share (75% if farmer provides inputs, 50% if owner does).</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">1980s-2000s</div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Structural Transformation</h3>
+                    <p>Dismantles large-scale feudal landlordism in rural Bengal. Creates secure, legally protected class of small-scale tenant farmers. Manual cultivation in South Bengal districts increasingly performed by marginalized communities across religious lines.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2011-Present</div>
+                <div class="timeline-content">
+                    <h3 style="color: var(--danger); margin-bottom: 0.5rem;">Alleged Manipulation Era</h3>
+                    <p>Critics allege state machinery, local panchayats, and land records manipulated to register ineligible beneficiaries as Bhag Chasis on state-owned, disputed, or vacuum lands—creating complex demographic and political dynamics in land rights distribution.</p>
+                </div>
+            </div>
+        </div>
+        <div class="alert reveal">
+            <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="alert-content">
+                <h4>Constitutional Safeguard Principle</h4>
+                <p>All land distribution and welfare allocation must remain strictly within constitutional and statutory boundaries. Eligibility is determined by documented cultivation history, socio-economic vulnerability, and legal residency—irrespective of religion or ethnicity. Systems are designed to eliminate leakage while preserving the dignity and rights of all legitimate beneficiaries.</p>
+            </div>
+        </div>
+        <div class="method-box reveal">
+            <h4><i class="fas fa-balance-scale"></i> Fair Distribution & Documentation Protocol</h4>
+            <ul>
+                <li><strong>Historical Corroboration:</strong> Cross-reference village revenue records, Panchayat minutes, crop purchase ledgers, and satellite imagery (1990–2010) to verify continuous cultivation</li>
+                <li><strong>Community Witness Panels:</strong> Legally recognized local committees (including retired revenue officers, agricultural extension workers, and neutral civil society members) to adjudicate disputed claims</li>
+                <li><strong>Dynamic Patta Registry:</strong> Digital, publicly accessible sharecropper database with audit trails, grievance portals, and periodic verification cycles</li>
+                <li><strong>Anti-Discrimination Safeguard:</strong> Strict adherence to constitutional land distribution principles with transparent, auditable eligibility criteria</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Restitution Section -->
+    <section id="restitution" class="section" style="background: linear-gradient(180deg, var(--dark-bg), rgba(239, 68, 68, 0.02), var(--dark-bg));">
+        <div class="section-header reveal">
+            <span class="section-tag">Deep Dive Analysis</span>
+            <h2 class="section-title">Property Restitution & Dispute Resolution</h2>
+            <p class="section-desc">
+                The central challenge: How to prove coercion and restore properties when 
+                legal documents appear valid but were obtained through systematic intimidation.
+            </p>
+        </div>
+        <div class="card-grid">
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-balance-scale-left"></i></div>
+                <h3>The Valuation Gap</h3>
+                <p>Land actual market value: ₹5 Crores. Transfer price documented: ₹2 Lakhs. This 250x undervaluation is the smoking gun—requires forensic economic analysis to prove systematic undervaluation patterns across multiple transactions.</p>
+                <div class="progress-container" style="margin-top: 1rem;">
+                    <div class="progress-label"><span>Documented Value</span><span>₹2L</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 0.4%; background: var(--danger);"></div></div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>Actual Market Value</span><span>₹5Cr</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--success);"></div></div>
+                </div>
+            </div>
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);"><i class="fas fa-file-signature"></i></div>
+                <h3>The Documentation Trap</h3>
+                <p>Victims signed transfer documents under duress but papers appear legally valid. Challenge: proving coercion retroactively when perpetrators have destroyed evidence, intimidated witnesses, and embedded themselves in local administrative structures.</p>
+                <div style="margin-top: 1rem;"><span class="tag caution-tag">Witness Intimidation</span><span class="tag caution-tag">Evidence Destruction</span><span class="tag caution-tag">Administrative Capture</span></div>
+            </div>
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-user-tie"></i></div>
+                <h3>Political Patronage Network</h3>
+                <p>Local enforcers operated under protection of top leadership. This created a hierarchical extortion network where ground-level coercion was shielded from law enforcement and judicial intervention through systemic political protection.</p>
+                <div style="margin-top: 1rem;"><span class="tag caution-tag">Ministerial Protection</span><span class="tag caution-tag">Network Structure</span></div>
+            </div>
+            <div class="card crisis-card reveal">
+                <div class="card-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i class="fas fa-map-marked-alt"></i></div>
+                <h3>Demographic Clustering Pattern</h3>
+                <p>Fake beneficiaries and illegal occupants tend to concentrate in specific colonies dominated by particular communities. This clustering creates identifiable geographic signatures mappable through satellite imagery, voter rolls, and utility connection data.</p>
+                <div style="margin-top: 1rem;"><span class="tag">Geographic Signature</span><span class="tag">Satellite Mapping</span><span class="tag">Utility Data</span></div>
+            </div>
+        </div>
+        <div class="method-box reveal">
+            <h4><i class="fas fa-search-dollar"></i> Genius Restitution Architecture</h4>
+            <ul>
+                <li><strong>Forensic Document Auditing:</strong> AI-assisted handwriting, signature, and seal verification. Cross-check notary logs, stamp duty records, and bank transaction trails to identify anomalies indicative of coercion or fraud</li>
+                <li><strong>Independent Land Tribunal:</strong> Time-bound, multi-disciplinary tribunal (judicial, revenue, forensic accounting experts) with powers to freeze disputed transfers, mandate valuation reassessments, and order restitution</li>
+                <li><strong>Presumption Against Duress:</strong> Legal rebuttable presumption: transactions where sale price falls below 20% of contemporaneous circle rate trigger automatic review. Burden of proof shifts to acquirer to demonstrate free, informed consent</li>
+                <li><strong>Witness & Whistleblower Protection:</strong> Secure, anonymous reporting channels with legal immunity and financial safeguards for informants exposing coercive transfers or syndicate intimidation</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Welfare Section -->
+    <section id="welfare" class="section">
+        <div class="section-header reveal">
+            <span class="section-tag">Strategic Framework</span>
+            <h2 class="section-title">Welfare Scheme Optimization & Beneficiary Integrity</h2>
+            <p class="section-desc">
+                SC/ST/OBC welfare schemes are constitutionally mandated to support historically marginalized communities. 
+                Ensuring precise, legally compliant targeting while preventing misallocation requires robust verification systems.
+            </p>
+        </div>
+        <div class="matrix-grid">
+            <div class="card solution-card reveal">
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-user-check"></i></div>
+                <h3>Multi-Layer Eligibility Verification</h3>
+                <p>Cross-departmental validation combining caste certificates, income thresholds, landholding status, and residential history to ensure constitutional compliance.</p>
+                <div class="solution-box">
+                    <h4><i class="fas fa-lightbulb"></i> Implementation</h4>
+                    <ul>
+                        <li>Cross-database validation: Aadhaar + Voter ID + Ration Card + Land Records</li>
+                        <li>Ancestry verification: 3-generation residential history requirement</li>
+                        <li>Income & asset thresholds aligned with scheme objectives</li>
+                        <li>Automated flagging of duplicate claims across schemes</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card solution-card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-brain"></i></div>
+                <h3>AI Anomaly Detection</h3>
+                <p>Machine learning models flag duplicate claims, rapid geographic clustering inconsistent with demographic baselines, or certificate issuance patterns deviating from administrative norms.</p>
+                <div class="solution-box">
+                    <h4><i class="fas fa-lightbulb"></i> Implementation</h4>
+                    <ul>
+                        <li>Pattern recognition for suspicious certificate issuance clusters</li>
+                        <li>Geospatial analysis of beneficiary distribution vs. historical demographics</li>
+                        <li>Temporal anomaly detection for sudden beneficiary spikes</li>
+                        <li>Natural language processing for document forgery detection</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card solution-card reveal">
+                <div class="card-icon" style="background: rgba(232, 185, 35, 0.1); color: var(--accent);"><i class="fas fa-globe"></i></div>
+                <h3>Transparent Beneficiary Portals</h3>
+                <p>Publicly accessible (privacy-compliant) dashboards showing scheme-wise allocation, approval status, and grievance resolution metrics for public accountability.</p>
+                <div class="solution-box">
+                    <h4><i class="fas fa-lightbulb"></i> Implementation</h4>
+                    <ul>
+                        <li>Real-time dashboard with scheme-wise allocation metrics</li>
+                        <li>Public grievance portal with tracked resolution timelines</li>
+                        <li>Downloadable beneficiary lists (redacted for privacy) for community verification</li>
+                        <li>API access for independent researchers and civil society auditors</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card solution-card reveal">
+                <div class="card-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i class="fas fa-users"></i></div>
+                <h3>Community Audit Committees</h3>
+                <p>Rotating, randomized local panels empowered to review beneficiary lists, conduct field verifications, and recommend corrections without political interference.</p>
+                <div class="solution-box">
+                    <h4><i class="fas fa-lightbulb"></i> Implementation</h4>
+                    <ul>
+                        <li>Random selection of committee members from voter rolls</li>
+                        <li>Legal standing to recommend beneficiary corrections</li>
+                        <li>Training on constitutional principles and verification protocols</li>
+                        <li>Protected reporting channels for committee findings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="alert reveal">
+            <div class="alert-icon"><i class="fas fa-gavel"></i></div>
+            <div class="alert-content">
+                <h4>Legal Compliance Enforcement</h4>
+                <p>Strict penalties for fraudulent certificate procurement or administrative collusion, balanced with due process and appeal mechanisms. All enforcement actions must be transparent, documented, and subject to judicial review to prevent misuse of verification systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Blueprint Section -->
+    <section id="tech" class="section" style="background: linear-gradient(180deg, var(--dark-bg), rgba(59, 130, 246, 0.02), var(--dark-bg));">
+        <div class="section-header reveal">
+            <span class="section-tag">Technology Stack</span>
+            <h2 class="section-title">Integrated Governance Blueprint</h2>
+            <p class="section-desc">
+                A first-of-its-kind integrated governance stack designed for transparency, auditability, and real-time monitoring.
+            </p>
+        </div>
+        <div class="card-grid">
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(232, 185, 35, 0.1); color: var(--accent);"><i class="fas fa-link"></i></div>
+                <h3>Blockchain Land Registry</h3>
+                <p>Immutable, timestamped property records with cryptographic proof of ownership, transfer history, and dispute status. Prevents unauthorized alterations and ensures chain-of-title integrity with smart contract automation for suspicious transaction flagging.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-satellite"></i></div>
+                <h3>Satellite & Drone Monitoring</h3>
+                <p>Quarterly orthomosaic imaging of Bheri zones, agricultural belts, and encroachment hotspots. Automated change-detection algorithms alert revenue departments to unauthorized filling or land-use conversion with geotagged evidence trails.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-robot"></i></div>
+                <h3>AI Document Forensics</h3>
+                <p>Advanced NLP and computer vision models analyze historical deeds, Patta records, and welfare certificates. Detects forgery, backdating, template manipulation, and signature anomalies with confidence scoring for judicial review.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-chart-line"></i></div>
+                <h3>Open Governance Dashboard</h3>
+                <p>Real-time visualization of land restitution progress, Bheri ecological health metrics, welfare distribution accuracy, and tribunal case backlogs. Ensures public accountability and data-driven policy iteration with API access for independent verification.</p>
+            </div>
+        </div>
+        <div class="method-box reveal">
+            <h4><i class="fas fa-shield-alt"></i> Institutional Safeguards</h4>
+            <ul>
+                <li><strong>Independent Land Recovery Commission:</strong> Constitutional protection, bipartisan appointment, 7-year tenure to insulate from political cycles</li>
+                <li><strong>Technology Governance Council:</strong> Multi-stakeholder oversight of AI/Blockchain systems to prevent algorithmic bias or misuse</li>
+                <li><strong>Community Participation Framework:</strong> Gram Sabha verification for all land allocations with legal standing for community monitoring committees</li>
+                <li><strong>Penal Deterrence:</strong> Mandatory minimum penalties for forced acquisition with asset confiscation including properties of political patrons</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="section">
+        <div class="section-header reveal">
+            <span class="section-tag">Implementation Roadmap</span>
+            <h2 class="section-title">Phased Recovery Framework</h2>
+            <p class="section-desc">
+                A prioritized implementation framework with clear metrics, responsible agencies, and measurable outcomes for each recovery dimension.
+            </p>
+        </div>
+        <div class="chart-container reveal">
+            <h3 style="margin-bottom: 1.5rem; color: var(--text-primary);">Phase-wise Implementation Timeline</h3>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Duration</th>
+                            <th>Focus Area</th>
+                            <th>Key Actions</th>
+                            <th>Success Metrics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: var(--accent);">Phase 1</strong></td>
+                            <td>0-6 Months</td>
+                            <td>Foundation & Documentation</td>
+                            <td>Establish Independent Land Tribunal, GIS baseline mapping, whistleblower portal, blockchain pilot</td>
+                            <td>100% digitization of disputed records, 10,000+ victim registrations</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--info);">Phase 2</strong></td>
+                            <td>6-18 Months</td>
+                            <td>Integration & Verification</td>
+                            <td>AI document verification rollout, cooperative registration for Bheris, community audit cycles</td>
+                            <td>50 special courts operational, 500+ cases filed, 100 Bheris mapped</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--success);">Phase 3</strong></td>
+                            <td>18-36 Months</td>
+                            <td>Physical Recovery</td>
+                            <td>Property restitution, Bheri ecological restoration, welfare beneficiary cleanup</td>
+                            <td>5,000+ properties restored, 100 Bheris reclaimed, 95% scheme accuracy</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--warning);">Phase 4</strong></td>
+                            <td>36-60 Months</td>
+                            <td>Systemic Reform</td>
+                            <td>Full blockchain registry integration, AI monitoring, community governance codification</td>
+                            <td>Zero new encroachment, annual independent audit reports, policy codification</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-grid" style="margin-top: 3rem;">
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(232, 185, 35, 0.1); color: var(--accent);"><i class="fas fa-shield-alt"></i></div>
+                <h3>Constitutional Compliance</h3>
+                <p>All recommendations operate within constitutional parameters, emphasize due process, and prioritize equitable, data-driven governance. No recommendation compromises fundamental rights or discriminates on religious, ethnic, or caste grounds.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);"><i class="fas fa-balance-scale"></i></div>
+                <h3>Judicial Oversight</h3>
+                <p>Independent tribunals with judicial members ensure all restitution actions are subject to legal review. Appeal mechanisms protect against administrative overreach while enabling timely justice for victims of coercion.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-hands-helping"></i></div>
+                <h3>Community Empowerment</h3>
+                <p>Gram Sabha verification, community audit committees, and transparent dashboards ensure local stakeholders have meaningful participation in recovery processes without political interference.</p>
+            </div>
+            <div class="card reveal">
+                <div class="card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-gavel"></i></div>
+                <h3>Accountability Mechanisms</h3>
+                <p>Mandatory public reporting, independent audit committees, and whistleblower protections create multiple layers of accountability to prevent misuse of recovery powers and ensure sustained reform.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo"><i class="fas fa-shield-alt"></i> WB Recovery Framework</div>
+            <p class="footer-text">
+                A comprehensive analytical framework for land rights recovery, ecological restoration, 
+                and administrative reform in West Bengal. This document represents a first-of-its-kind 
+                global research initiative addressing multi-dimensional property and resource crises 
+                through evidence-based, constitutionally sound policy solutions.
+            </p>
+            <div class="footer-creator">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">Created by</p>
+                <p class="name">Kallol Chakrabarti</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">Global Independent Researcher</p>
+                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem;">
+                    <i class="fas fa-globe"></i> Independent Research Initiative | 2026
+                </p>
+            </div>
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--dark-border);">
+                <p style="color: var(--text-muted); font-size: 0.8rem;">
+                    This framework is intended for academic research, policy analysis, and administrative reference. 
+                    All recommendations are based on publicly available information, established legal principles, 
+                    and constitutional safeguards. Implementation must prioritize due process, human rights, 
+                    and equitable governance for all communities.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Counter Animation
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const inc = target / speed;
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(animateCounters, 20);
+                } else { counter.innerText = target.toLocaleString(); }
+            });
+        };
+
+        // Scroll Reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (elementTop < windowHeight - 100) { element.classList.add('active'); }
+            });
+        };
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 15, 0.98)';
+                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.3)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 15, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Initialize
+        window.addEventListener('load', () => { animateCounters(); revealOnScroll(); });
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Progress bar animation
+        const progressBars = document.querySelectorAll('.progress-fill');
+        const animateProgress = () => {
+            progressBars.forEach(bar => {
+                const rect = bar.getBoundingClientRect();
+                if (rect.top < window.innerHeight) { bar.style.width = bar.style.width; }
+            });
+        };
+        window.addEventListener('scroll', animateProgress);
+    </script>
+</body>
+</html>
